@@ -1,0 +1,9 @@
+<Simulation version="4.2.5">
+   <XMLScript Type="XMLScript">Simulation/EC_Connect_V10.xml</XMLScript>
+   <PythonScript Type="PythonScript">Simulation/EC_Connect_V10.py</PythonScript>
+   <Resource Type="Python">Simulation/NDJ_CellMorph.py</Resource>
+   <Resource Type="Python">Simulation/NDJ_Interactions.py</Resource>
+   <Resource Type="Python">Simulation/NDJ_SBML_Step.py</Resource>
+   <Resource Type="Python">Simulation/NDJ_V9.py</Resource>
+   <Resource Type="Python">Simulation/NDJ_Vis_DataTrack.py</Resource>
+</Simulation>

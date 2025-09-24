@@ -1,0 +1,82 @@
+<CompuCell3D Revision="20210612" Version="4.2.5">
+<Metadata>
+
+      <!-- Basic properties simulation -->
+      <NumberOfProcessors>1</NumberOfProcessors>
+      <DebugOutputFrequency>0</DebugOutputFrequency>
+      <!-- <NonParallelModule Name="Potts"/> -->
+   </Metadata>
+
+   <Potts>
+      <!-- Basic properties of CPM (GGH) algorithm -->
+      <Dimensions x="270" y="270" z="1"/>
+      <!--<Dimensions x="270" y="310" z="1"/> add a band of medium on top -->
+      <Steps>5100</Steps>
+
+      <!-- <FluctuationAmplitude> -->
+        <!-- <FluctuationAmplitudeParameters CellType="EC" FluctuationAmplitude="20"/> -->
+      <!-- </FluctuationAmplitude> -->
+
+      <NeighborOrder>2</NeighborOrder>
+      <Boundary_x>Periodic</Boundary_x>
+      <Boundary_y>Periodic</Boundary_y>
+   </Potts>
+
+   <Plugin Name="CellType">
+      <CellType TypeId="0" TypeName="Medium" Freeze=""/>
+      <CellType TypeId="1" TypeName="EC" Freeze=""/>
+      <!-- <CellType TypeId="1" TypeName="EC"/> -->
+      <!-- <CellType TypeId="2" TypeName="Wall" Freeze=""/> -->
+   </Plugin>
+
+   <!-- <Plugin Name="Connectivity"> -->
+        <!-- <Penalty>10000000</Penalty> -->
+   <!-- </Plugin> -->
+
+   <!-- <Plugin Name="MomentOfInertia"/> -->
+
+   <!-- <Plugin Name="Surface"/> -->
+
+   <!-- <Plugin Name="CenterOfMass"> -->
+   <!-- </Plugin> -->
+
+   <Plugin Name="NeighborTracker">
+    </Plugin>
+
+   <!-- <Plugin Name="PixelTracker"> -->
+   <!-- </Plugin> -->
+
+   <!-- <Plugin Name="BoundaryPixelTracker"> -->
+      <!-- <NeighborOrder>0</NeighborOrder> -->
+   <!-- </Plugin> -->
+   
+   <!-- <Plugin Name="Contact"> -->
+       <!-- <Energy Type1="Medium" Type2="Medium">0.0</Energy> -->
+       <!-- <Energy Type1="Medium" Type2="EC">1.0</Energy> -->
+        <!-- <Energy Type1="EC" Type2="EC">3.0</Energy> -->
+       <!-- <NeighborOrder>2</NeighborOrder> -->
+   <!-- </Plugin> -->
+
+
+   <!-- Periodically stores cell layout configuration in a piff format -->
+   <!-- <Steppable Frequency="300" Type="PIFDumper">    -->
+    <!-- <PIFName>IMG1_D</PIFName> -->
+    <!-- <PIFFileExtension>piff</PIFFileExtension> -->
+   <!-- </Steppable> -->
+   
+   <!-- <Steppable Type="UniformInitializer"> -->
+      <!-- <Region> -->
+       <!-- <BoxMin x="0" y="0" z="0"/> -->
+       <!-- <BoxMax x="270" y="270" z="1"/> -->
+       <!-- <Gap>0</Gap> -->
+       <!-- <Width>25</Width> -->
+       <!-- <Types>EC</Types> -->
+     <!-- </Region>      -->
+   <!-- </Steppable> -->
+   
+
+   <Steppable Type="PIFInitializer">
+      <PIFName>Simulation/HU_VE.piff</PIFName>
+   </Steppable>
+   
+</CompuCell3D>
