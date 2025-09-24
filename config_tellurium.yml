@@ -1,0 +1,15 @@
+name: NDJ_Dynamics_tellurium
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - numpy
+  - scikit-image
+  - tqdm
+  - multiprocess
+  - pandas
+  - zarr
+  - matplotlib
+  - pip
+  - pip:
+    - tellurium

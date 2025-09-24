@@ -1,0 +1,18 @@
+name: NDJ_CC3D
+channels:
+  - conda-forge
+  - compucell3d
+dependencies:
+  - python=3.10 
+  - compucell3d=4.6
+  - scikit-image
+  - tqdm
+  - multiprocess
+  - pandas
+  - zarr # From python 3.11 zarr should istall version 3.0.0 supporting zarr3 specification
+  - matplotlib
+  - pip
+  - pip:
+    - nevergrad
+
+

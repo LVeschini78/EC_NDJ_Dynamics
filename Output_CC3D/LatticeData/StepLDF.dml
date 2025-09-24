@@ -1,0 +1,10 @@
+<CompuCell3DLatticeData Version="1.0">
+   <Dimensions x="270" y="270" z="1"/>
+   <Lattice Type="Square"/>
+   <Output CoreFileName="Step" Directory="/Users/lory/Desktop/Git_LVeschini78/EC_NDJ_Dynamics/Output_CC3D/LatticeData" Frequency="1" NumberOfSteps="2000"/>
+   <CellType TypeId="0" TypeName="Medium"/>
+   <CellType TypeId="1" TypeName="EC"/>
+   <Fields>
+      <Field Name="Cell_Field" Type="CellField"/>
+   </Fields>
+</CompuCell3DLatticeData>
