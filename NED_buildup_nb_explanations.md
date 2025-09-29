@@ -1,13 +1,5 @@
 # Supplementary Explanations: NED Model Jupyter Notebook
 
-This document provides a comprehensive narrative of the explanations and markdown content from the NED model Jupyter notebook. It is intended as supplementary material for the associated publication, offering detailed insights into the model structure, mathematical formulations, and biological rationale.
-
----
-
-# Full model String
-
-# Load the NED model and check the model string components
-
 # Step-by-step NED model buildup
 
 ## S 0: Utility functions
