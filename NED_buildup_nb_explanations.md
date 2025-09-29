@@ -250,12 +250,6 @@ Below are all figures referenced in Section 3.2, with brief comments on their me
 **Fig 3.2.3 A:** Sensitivity analysis: effect of K (affinity parameter) on HES1 oscillations.  
 ![HES_Stdy_NICD_SC](nb_Figures/HES_Stdy_NICD_SC.png)
 
----
-
-**Fig 3.2.3 B:** Sensitivity analysis: effect of delay and degradation parameters on HES1 oscillations.  
-![legend_0_5000](nb_Figures/legend_0_5000.png)
-
----
 
 **Fig 3.2.4:** Additional phase portraits and parameter sweeps for HES1 sub-model.  
 See code in Section 3.2 for details on generating these figures.
