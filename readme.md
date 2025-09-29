@@ -134,6 +134,7 @@ Open `NED_buildup_nb.ipynb` in Jupyter for:
 - Model parameter exploration
 - SBML model visualization  
 - Results analysis and plotting
+Please view the [NED buildup notebook explanations](NED_buildup_nb_explanations.md) for non-interactive explanations.
 
 ## Model Parameters
 
