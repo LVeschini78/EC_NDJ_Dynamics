@@ -266,10 +266,8 @@ See code in Section 3.2 for details on generating these figures.
 
 ![Phase portrait kdh-kdel](nb_Figures/Phase_kdh_kdel.png)
 
-![Phase portrait khp-khd](nb_Figures/phase_khp_khd.png)
+![Phase portrait khp-khd](nb_Figures/Phase_khp_khd.png)
 
 ![Phase portrait kmrp-kmrd](nb_Figures/phase_kmrp_kmrd.png)
 
 ![Phase portrait kphp-khd](nb_Figures/phase_kphp_khd.png)
-
-
