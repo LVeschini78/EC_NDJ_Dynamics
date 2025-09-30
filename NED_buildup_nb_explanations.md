@@ -213,37 +213,6 @@ This compact form is suitable for both simulation and analytical study, and was 
 
 # Supplementary Figures: Section 3.2 HES1 Autoregulatory Sub-model
 
-Below are all figures referenced in Section 3.2, with brief comments on their meaning.
-
----
-
-**Fig 3.2.1 A:** HES1 dynamics in response to increasing NICD input. Maximum HES1 levels increase with NICD and oscillations emerge above a threshold.  
-![HES_NICD](nb_Figures/HES_NICD_SC.png)
-
-
----
-
-**Fig 3.2.1 B:** Steady-state and oscillatory regimes of HES1 as a function of NICD. Oscillations emerge above a threshold.  
-![HES_NICD_stdy](nb_Figures/HES_Stdy_NICD_SC.png)
-
-
----
-
-**Fig 3.2.2 A:** Sensitivity analysis: effect of the hill coefficient (hh1) on HES1 oscillations.  
-![HES_hh1_SC](nb_Figures/HES_hh1_SC.png)
-
----
-
-**Fig 3.2.2 B:** Sensitivity analysis: effect of the Hill coefficient (hh1) on HES1 oscillatory behavior.  
-![HES_Stdy_hh1_SC](nb_Figures/HES_Stdy_hh1_SC.png)
-
----
-
-**Fig 3.2.3 A:** Sensitivity analysis: effect of K (affinity parameter) on HES1 oscillations.  
-![HES_Stdy_NICD_SC](nb_Figures/HES_Stdy_NICD_SC.png)
-
-
-**Fig 3.2.4:** Additional phase portraits and parameter sweeps for HES1 sub-model.  
 See code in Section 3.2 for details on generating these figures.
 
 [HES1 submodel Sensitivity Analysis (PDF)](nb_Figures/HES1_Autoregulation_SA.pdf)
