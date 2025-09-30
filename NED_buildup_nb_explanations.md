@@ -213,7 +213,7 @@ This compact form is suitable for both simulation and analytical study, and was 
 
 # Supplementary Figures: Section 3.2 HES1 Autoregulatory Sub-model
 
-Below are all figures referenced in Section 3.2, with brief comments on their meaning. For each, the code used to generate the figure is indicated for reference.
+Below are all figures referenced in Section 3.2, with brief comments on their meaning.
 
 ---
 
@@ -229,7 +229,7 @@ Below are all figures referenced in Section 3.2, with brief comments on their me
 
 ---
 
-**Fig 3.2.2 A:** Sensitivity analysis: effect of vm_prna (maximal transcription rate) on HES1 oscillations.  
+**Fig 3.2.2 A:** Sensitivity analysis: effect of the hill coefficient (hh1) on HES1 oscillations.  
 ![HES_hh1_SC](nb_Figures/HES_hh1_SC.png)
 
 ---
@@ -246,14 +246,4 @@ Below are all figures referenced in Section 3.2, with brief comments on their me
 **Fig 3.2.4:** Additional phase portraits and parameter sweeps for HES1 sub-model.  
 See code in Section 3.2 for details on generating these figures.
 
-![Phase portrait vm_prna-K](nb_Figures/Phase_vm_prna_K.png)
-
-![Phase portrait kdel-mdh](nb_Figures/phase_kdel_mdh.png)
-
-![Phase portrait kdh-kdel](nb_Figures/Phase_kdh_kdel.png)
-
-![Phase portrait khp-khd](nb_Figures/Phase_khp_khd.png)
-
-![Phase portrait kmrp-kmrd](nb_Figures/phase_kmrp_kmrd.png)
-
-![Phase portrait kphp-khd](nb_Figures/phase_kphp_khd.png)
+[HES1 submodel Sensitivity Analysis (PDF)](nb_Figures/HES1_Autoregulation_SA.pdf)
