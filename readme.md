@@ -9,29 +9,15 @@ Computational framework for Endothelial Cell (EC) Notch-Delta-Jagged (NDJ) dynam
 - **Search/optimization scripts** for parameter exploration.
 - **Documentation** for model rationale and parameters.
 
-## Repository structure
+## Project layout
 
-```
-EC_NDJ_Dynamics/
-├── EC_Connect_core.py
-├── EC_Connect_search.py
-├── NED_HES_Antimony.py
-├── config_cc3d.yml
-├── config_tellurium.yml
-├── CC3D_NED/
-│   ├── EC_Connect_v11.cc3d
-│   └── Simulation/
-│       ├── EC_Connect_V10.py
-│       ├── EC_Connect_V10.xml
-│       ├── NDJ_CellMorph.py
-│       ├── NDJ_Interactions.py
-│       ├── NDJ_SBML_Step.py
-│       ├── NDJ_V9.py
-│       └── NDJ_Vis_DataTrack.py
-├── docs/
-├── nb_Figures/
-└── Output_CC3D/
-```
+- Core orchestration: `EC_Connect_core.py`
+- Parameter search workflows: `EC_Connect_search.py`
+- NDJ signaling model definition: `NED_HES_Antimony.py`
+- Environment specifications: `config_cc3d.yml`, `config_tellurium.yml`
+- CC3D project and steppables: `CC3D_NED/`
+- Documentation and model notes: `docs/`
+- Generated figures and simulation outputs: `nb_Figures/`
 
 ## Quick start
 

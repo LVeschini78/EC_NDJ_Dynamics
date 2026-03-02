@@ -1,5 +1,6 @@
 data_and_analysis/
 Legacy/
+Output_CC3D/
 __pycache__/
 
 # Python bytecode and cache
