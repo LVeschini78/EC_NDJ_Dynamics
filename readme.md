@@ -54,8 +54,7 @@ Open `CC3D_NED/EC_Connect_v11.cc3d` in CompuCell3D Player/Twedit++.
 
 Detailed model notes and parameter references are in `docs/`:
 
-- [NED buildup notebook explanations (current)](docs/NED_buildup_nb_explanations_V2.0.md)
-- [NED buildup notebook explanations (previous)](docs/NED_buildup_nb_explanations.md)
+- [NED buildup notebook explanations](docs/NED_buildup_nb_explanations_V2.0.md)
 - [NED parameters table](docs/NED_buildup_parmeters_table.md)
 - [HES1 autoregulation sensitivity analysis (PDF)](docs/HES1_Autoregulation_SA.pdf)
 
