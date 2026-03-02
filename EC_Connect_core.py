@@ -59,7 +59,7 @@ class ECConnectCore:
         # Options used in the paper are HU_CT11.piff (medium VEGF HUVEC),
         # HU_VE2.piff (high VEGF HUVEC), QuadPattern.piff (Regular square cells)
         curr_wd = os.getcwd()
-        piff_path = os.path.join(curr_wd, "CC3D_NED","Simulation", "HU_VE2.piff")
+        piff_path = os.path.join(curr_wd, "CC3D_NED","Simulation", "HU_CT11.piff")
 
         pif_initializer = PIFInitializer(pif_name=piff_path)
         self.specs.append(pif_initializer)
@@ -231,7 +231,7 @@ class ECConnectStep(SteppableBasePy):
                         kpDJ1 = (d4_contrib/(1+d4_contrib+(kJC*j1_contrib))) # Competition of J1 for N1
                         kpDJ2 = 1-kpDJ1
                         nb_cell.sbml.NDS['dD4'] += min((kpDJ1*d4_contrib),(kpDJ1*n1_contrib)) #D4 donated in trans
-                        nb_cell.sbml.NDS['dJ1'] += min((kpDJ2*d4_contrib),(kpDJ2*n1_contrib)) #J1 donated in trans                  
+                        nb_cell.sbml.NDS['dJ1'] += min((kpDJ2*j1_contrib),(kpDJ2*n1_contrib)) #J1 donated in trans                  
                         cell.sbml.NDS['tmDN'] += min((kpDJ1*d4_contrib),(kpDJ1*n1_contrib))
 
                         if cell.id == tracked_nb_id and mcs > 1001 - time_tracked:
@@ -307,7 +307,6 @@ class ECConnectStep(SteppableBasePy):
         ps_Kdni = 0.0; 
         ps_kconv = 0.0;
         cr = 0;
-        ps_K_nui = 0.0;
         
         ## NICD Production Degradation
         Vmni= 100; hMni:= ps_ni; Kdni:= ps_Kdni; tmDN=0; NICD = 0;

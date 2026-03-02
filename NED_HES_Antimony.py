@@ -53,75 +53,57 @@ class NED_runner():
 
         self.NICD_reg = """
         ## NICD Production Degradation
-        Vmni= 100; hMni:= ps_ni; Kdni:= ps_Kdni; tmDN=0; NICD = 0;
+        Vmni= 100/4; hMni:= ps_ni; Kdni:= ps_Kdni/4; tmDN=0; NICD = 0;
         NI_prod: => NICD; Hp(Vmni,(tmDN+cmDN),hMni,4); 
         NI_deg: NICD => ; Ma(NICD,Kdni);
         """
 
         self.ligands_receptors_reg = """
-        ## Ligands/receptors production and degradation
-        Amp=10 # amplification mRNA=>Protein     
-
+        # Ligands/receptors production and degradation
         # NOTCH1 expression, can be modifed to include HES1 inducibility
-        N1=0; VmN1= Amp*1; hMn1=50; Kdn1=0.05; bN1:= Amp*ps_bn1; sc=25; #bN * scaling 25/min
+        N1=0; VmN1= 250; hMn1=50; Kdn1=0.05; bN1:= 250;
 
                                    # N1 inducibility by HES1
-        N1_prod: => N1; sc*(bN1);  # + Hp(VmN1,H1,hMn1,4)); 
-        N1_deg: N1=> ; Ma(N1,Kdn1)+(tmDN*Hp(Kdn1,(tmDN+cmDN),hMni,4));;
+        N1_prod: => N1; Ma(1,bN1); # + Hp(VmN1,H1,hMn1,4)); 
+        N1_deg: N1=> ; Ma(N1,Kdn1)+(tmDN*Hp(Kdn1,(tmDN+cmDN),hMni,4));
         
         # DLL4 expression repressed by HES1
-        D4=0; VmD4= Amp*1; hMd4=50; Kdd4=0.05; bD4:= Amp*ps_bd4; dD4=0;
+        D4=0; hMd4=50; Kdd4=0.05; bD4:= 250; dD4=0;
         
-        D4_prod: =>D4; sc*Hn(bD4,H1,hMd4,4); 
-        D4_deg: D4=> ; Ma(D4+(dD4*D4/(1+D4)),Kdd4); 
+        D4_prod: =>D4; Hn(bD4,H1,hMd4,4); 
+        D4_deg: D4=> ; Ma(D4 + (dD4*D4/(1+D4)), Kdd4); 
           
         # Jagged1 expression basal and inducible by HES1
-        J1=0; VmJ1:= Amp*ps_ind; hMj1:= ps_ja; Kdj1= 0.05; dJ1= 0; bJ1:= Amp*ps_bJ1;
+        J1=0; VmJ1:= 250; hMj1:= ps_ja; Kdj1= 0.05; dJ1= 0; bJ1:= 0;
         
-        J1_prod: =>J1; sc*(bJ1+Hp(VmJ1,H1,hMj1,4)); 
-        J1_deg: J1=> ; Ma(J1+(J1*dJ1/(1+J1)),Kdj1);
+        J1_prod: =>J1; Ma(1,bJ1) + Hp(VmJ1,H1,hMj1,4); 
+        J1_deg: J1=> ; Ma(J1 + (J1*dJ1/(1+J1)), Kdj1);
         
-        """
-        self.HES_auto_orig = """
-        #HES1 With Autoregulatory feedback
-        iH1=0; H1=0; VmH1= Amp*1; hMh1=50; Kdh1=0.09; bH1= 0.0; K_nuI:= ps_K_nui;
-        =>iH1; bH1+Hc(VmH1,NICD,0.00000005*H1,hMh1,2); #=>iH1; bH1+Hp(VmH1,(NICD/(1+(H1/200))),hMh1,2);                
-        iH1=>H1; Ma(iH1,K_nuI);
-        H1=> ; Ma(H1,Kdh1);
         """
 
         self.HES_auto = """
-        # HES 1 Autoregulation with delay 
-        Kni = 0.5; Khe =0.5; 
-        kdel = 0.55; kmm = 0.55; hh1 = 8; Mdh = 0.05;
-        vm_prna = 1.4; kdh = 0.35;
+        vm_prna = 0.1; hh1 = 8; K = 0.5; # Parameters for the competitive hill function
+        pmRNA_prod: => pmRNA; Hc(vm_prna, NICD, pmRNA, HES, K, 1, K, 1, K, hh1); # Competitive hill function for inactive mRNA transcription
         
-        pmRNA_prod:  => pmRNA; Hc(vm_prna,(NICD*0.01),HES,pmRNA,Kni,1,Khe,hh1,Kni,1); # Competitive hill function for inactive mRNA production
-        mRNA_prod: pmRNA => mRNA; MM(pmRNA,kdel,kmm); # Michaelis-Menten for active mRNA production
-        pH1_prod: mRNA => pHES; MM(mRNA,kdel,kmm); # Michaelis-Menten for inactive protein production
-        HES_prod: pHES => HES; MM(pHES,kdel,kmm); # Michaelis-Menten for active protein production
-        HES_deg: HES => ; MM(HES,kdh,Mdh); # Michaelis-Menten for protein degradation
+        kmrp = 0.1; kmrd = 0.05; # Parameters for mRNA processing and degradation
+        mRNA_prod: pmRNA => mRNA; MM(pmRNA,kmrp,K); # Michaelis-Menten reaction for mRNA processing
+        mRNA_deg: mRNA => ; MM(mRNA,kmrd,K); # Michaelis-Menten reaction for mRNA degradation
+        
+        kphp = 0.1; khp = 0.1; khd = 0.075; # Parameters for inactive and active protein translation and degradation
+        pHES_prod:  => pHES; MM(mRNA,kphp,K); # Michaelis-Menten reaction for inactive protein translation
+        HES_prod: pHES => HES;  MM(pHES,khp,K); # Michaelis-Menten reaction for active protein translation
+        HES_deg: HES => ; MM(HES,khd,K); # Michaelis-Menten reaction for active protein degradation
 
         # Hes scaling
         # H1 = 0
         H1_scaling: => H1; (HES * 100 - H1);
         """
-        # CORRECT ONE
-        self.NED_string_compact = """
-        vm_prna = 0.1; hh1 = 8; K = 0.5; # Parameters for the competitive hill function
-        pmRNA_prod: => pmRNA; Hc(vm_prna, NICD, pmRNA, HES, K, 1, K, 1, K, hh1); # Competitive hill function for inactive mRNA transcription
-        kmrp = 0.1; kmrd = 0.05; # Parameters for mRNA processing and degradation
-        mRNA_prod: pmRNA => mRNA; MM(pmRNA,kmrp,K); # Michaelis-Menten reaction for mRNA processing
-        mRNA_deg: mRNA => ; MM(mRNA,kmrd,K); # Michaelis-Menten reaction for mRNA degradation
-        kphp = 0.1; khp = 0.1; khd = 0.075; # Parameters for inactive and active protein translation and degradation
-        pHES_prod:  => pHES; MM(mRNA,kphp,K); # Michaelis-Menten reaction for inactive protein translation
-        HES_prod: pHES => HES;  MM(pHES,khp,K); # Michaelis-Menten reaction for active protein translation
-        HES_deg: HES => ; MM(HES,khd,K); # Michaelis-Menten reaction for active protein degradation
-        """
+
         self.HES_no_auto = """
         # HES 1 Without autoregulatory feedback
+        H1 = 0
         hMh1=35; 
-        Kdh1 = 0.09; bH1 = 0.0; VmH1 = 10;
+        Kdh1 = 0.075; bH1 = 0.0; VmH1 = 7.5;
         H1_prod: =>H1; (bH1 + Hp(VmH1,NICD,hMh1,2)); 
         H1_deg: H1=> ; Ma(H1,Kdh1);
         """
@@ -288,7 +270,7 @@ class HES_runner:
 
         # NOTE: We replace scaled (NICD * 0.01) with NICD
         # Competitive hill function for inactive mRNA transcription        
-        vm_prna = 0.1; hh1 = 8; K = 0.5;
+        vm_prna = 0.18; hh1 = 8; K = 0.29;
         pmRNA_prod:  => pmRNA; vm_prna * NICD/K / (1 + NICD/K + pmRNA/K + HES^hh1/K^hh1);
         
         # Michaelis-Menten reactions for mRNA processing and degradation

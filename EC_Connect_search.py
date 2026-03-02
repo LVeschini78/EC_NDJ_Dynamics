@@ -93,18 +93,6 @@ def run_parallel_optimization(store: str):
     print("Best parameters found:", recommendation.kwargs)
     print("Best objective value:", objective_function(store, **recommendation.kwargs))
 
-# Define default parameters for simple parameter search
-default_params = dict(cr = 10,
-                      ps_bd4 = 100,
-                      ps_bn1 = 100,
-                      ps_bj1 = 0.0, 
-                      ps_ind = 0.0, 
-                      ps_ja = 5000, 
-                      ps_Kdni = 100, 
-                      ps_ni = 200000,
-                      ps_kconv = 8,
-                      ps_K_nui = 0.5)
-
 # Simple function to run a single simulation with given parameters
 def simple_sim_run(store:str, param_set:dict, expname:str):
     # We use the same store for simplicity, but in typical scenario we should consider unique stores
@@ -142,6 +130,27 @@ def run_two_params_search_parallel(store: str, param_1:str, range_1:tuple, param
         # Wait for all to finish
         concurrent.futures.wait(futures)
 
+# Define default parameters for simple parameter search
+orig_default_params = dict(cr = 10,
+                      ps_bd4 = 100,
+                      ps_bn1 = 100,
+                      ps_bj1 = 0.0, 
+                      ps_ind = 0.0, 
+                      ps_ja = 5000, 
+                      ps_Kdni = 100, 
+                      ps_ni = 200000,
+                      ps_kconv = 8)
+
+default_params = dict(cr = 11.5,
+                      ps_bd4 = 69,
+                      ps_bn1 = 100,
+                      ps_bj1 = 96, 
+                      ps_ind = 6.0, 
+                      ps_ja = 5000, 
+                      ps_Kdni = 100, 
+                      ps_ni = 200000,
+                      ps_kconv = 11)
+
 """
 Main function, uncomment the desired function to run parameter optimization, simple 2-parameter searches, or
 or individual simulations
@@ -149,16 +158,16 @@ or individual simulations
 def main():
     start_time = time()
     curr_wd = os.getcwd()
-    store = os.path.join(curr_wd, "Testing", "Scan_1.zarr")
+    store = os.path.join(curr_wd, "Testing", "NT_opt_cr_kconv_review.zarr")
     # run_parallel_optimization(store)
-    results = simple_sim_run(store, default_params, 'test_default')
-    # run_two_params_search_parallel(store,
-    #                                param_1='ps_bj1', 
-    #                                range_1=(0.0, 150),
-    #                                param_2='ps_ind',
-    #                                range_2=(0.0, 100),
-    #                                n_points=3,
-    #                                max_workers=10)
+    # results = simple_sim_run(store, default_params, 'test_default')
+    run_two_params_search_parallel(store,
+                                   param_1='cr', 
+                                   range_1=(0, 15.0),
+                                   param_2='ps_kconv',
+                                   range_2=(0, 15.0),
+                                   n_points=30,
+                                   max_workers=10)
     end_time = time()
     print(f"Optimization completed in {end_time - start_time:.2f} seconds.")
 
