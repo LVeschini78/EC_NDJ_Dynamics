@@ -58,6 +58,9 @@ Detailed model notes and parameter references are in `docs/`:
 - [NED parameters table](docs/NED_buildup_parmeters_table.md)
 - [HES1 autoregulation sensitivity analysis (PDF)](docs/HES1_Autoregulation_SA.pdf)
 
+## Data
+
+All original data generated for this project is available on Zenodo: [https://doi.org/10.5281/zenodo.18865760](https://doi.org/10.5281/zenodo.18865760)
 
 ## Citation
 
@@ -69,4 +72,4 @@ bioRxiv (2022). DOI: [10.1101/2022.08.06.503043](https://www.biorxiv.org/content
 
 ## License
 
-MIT License. See [LICENSE](LICENSE).
+Open source under the MIT License. See `LICENSE` for details.
