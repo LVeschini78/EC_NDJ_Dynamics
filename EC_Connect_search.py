@@ -23,14 +23,8 @@ param_space = ng.p.Instrumentation(
     ps_Kdni = 100,
     ps_ni = 200000,
     ps_kconv = ng.p.Scalar(init=10).set_bounds(0,15),
-    ps_K_nui = 100,
 )
 
-"""
-Define the optimizer. We choose Differential Evolution (DE)
-https://facebookresearch.github.io/nevergrad/optimizers_ref.html#nevergrad.families.DifferentialEvolution
-"""
-optimizer = ng.optimizers.DE(param_space, budget=5000, num_workers=10)
 
 """
 Objective function to minimize (or maximize)
@@ -46,19 +40,29 @@ def objective_function(store, **params):
                                              exp_name=local_expname,
                                              params=params)
     # Step the simulation for 1000 MCS and write results
-    for mcs in range(1001):
+    for mcs in range(1101):
         if mcs != 1000:
             sim_core.step()
         else:
             results = sim_core.step_write()
     ks_stat = results[0]
+    aks_stat = results[2]
     # print(f"Finished simulation with params: {params}, ks_stat: {ks_stat}")
-    return ks_stat
+    return aks_stat
 
 # Function to run optimization in parallel
 def run_parallel_optimization(store: str):
     # Use ProcessPoolExecutor to run simulations in parallel 
     # https://docs.python.org/3/library/concurrent.futures.html
+    """
+    Define the optimizer. We choose Differential Evolution (DE)
+    https://facebookresearch.github.io/nevergrad/optimizers_ref.html#nevergrad.families.DifferentialEvolution
+    """
+    optimizer = ng.optimizers.NGOpt8(param_space, budget=5000, num_workers=10)
+    first_param = optimizer.ask()
+    inner = getattr(optimizer, "_optimizer", getattr(optimizer, "_optim", None))
+    print("NGOpt8 chose:", inner.__class__.__name__)
+
     with concurrent.futures.ProcessPoolExecutor(max_workers=optimizer.num_workers) as executor:
         futures = {}
         # Submit initial jobs
@@ -102,13 +106,16 @@ def simple_sim_run(store:str, param_set:dict, expname:str):
     sim = EC_Connect_core.ECConnectCore(store=store,
                                         exp_name=expname,
                                         params=param_set)
-    # Step the simulation for 1000 MCS and write results
-    for mcs in range(1001):
+    # Step the simulation for 1100 MCS and write results
+    for mcs in range(1101):
         if mcs != 1000:
             sim.step()
         else:
             results = sim.step_write()
     print(f"Simulation {expname} completed. Ks Stat:", results[0])
+    print(f"Simulation {expname} completed. Aks Stat:", results[2])
+    print(f"Simulation {expname} completed. Aks p-value:", results[3])
+    return results
 
 # Function to a parameter search over two parameters with parallel execution
 def run_two_params_search_parallel(store: str, param_1:str, range_1:tuple, param_2:str, range_2:tuple, n_points:int = 10, max_workers=10):
@@ -121,7 +128,7 @@ def run_two_params_search_parallel(store: str, param_1:str, range_1:tuple, param
     with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
         futures = []
         for idx, (val1, val2) in enumerate(param_grid):
-            params = default_params.copy()
+            params = orig_default_params.copy()
             params[param_1] = val1
             params[param_2] = val2
             expname = idx+1
@@ -141,15 +148,15 @@ orig_default_params = dict(cr = 10,
                       ps_ni = 200000,
                       ps_kconv = 8)
 
-default_params = dict(cr = 11.5,
-                      ps_bd4 = 69,
-                      ps_bn1 = 100,
-                      ps_bj1 = 96, 
-                      ps_ind = 6.0, 
+default_params = dict(cr = 12.03,
+                      ps_bd4 = 100,
+                      ps_bn1 = 99.4,
+                      ps_bj1 = 100, 
+                      ps_ind = 5.8, 
                       ps_ja = 5000, 
                       ps_Kdni = 100, 
                       ps_ni = 200000,
-                      ps_kconv = 11)
+                      ps_kconv = 7.76)
 
 """
 Main function, uncomment the desired function to run parameter optimization, simple 2-parameter searches, or
@@ -158,17 +165,24 @@ or individual simulations
 def main():
     start_time = time()
     curr_wd = os.getcwd()
-    store = os.path.join(curr_wd, "Testing", "NT_opt_cr_kconv_review.zarr")
+    store = os.path.join(curr_wd, "Testing", "optim_aks2.zarr")
     # run_parallel_optimization(store)
-    # results = simple_sim_run(store, default_params, 'test_default')
-    run_two_params_search_parallel(store,
-                                   param_1='cr', 
-                                   range_1=(0, 15.0),
-                                   param_2='ps_kconv',
-                                   range_2=(0, 15.0),
-                                   n_points=30,
-                                   max_workers=10)
+    cum_results = []
+    for i in range(2):  # Run the simple simulation multiple times if needed
+        expname = f"test_default_{i}"
+        results = simple_sim_run(store, default_params, expname)
+        cum_results.append(results[0])  # Store only the ks_stat for simplicity
+    print("Cumulative results from multiple runs:", cum_results)
+    print(f"Average ks_stat over {len(cum_results)} runs: {np.mean(cum_results)}")
+     # run_two_params_search_parallel(store,
+    #                                param_1='cr', 
+    #                                range_1=(5, 25.0),
+    #                                param_2='ps_kconv',
+    #                                range_2=(5, 25.0),
+    #                                n_points=10,
+    #                                max_workers=10)
     end_time = time()
+    print("results:", results)
     print(f"Optimization completed in {end_time - start_time:.2f} seconds.")
 
 if __name__ == "__main__":

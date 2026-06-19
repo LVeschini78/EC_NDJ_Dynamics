@@ -40,11 +40,11 @@ model NDS()
 # Timescale 1 tick= 1', in CC3D each MCS runs the SBML for 10 tiks= 10'               
 
 # Scanned Parameters:
-auto = 0;   # If 1, use the auto-regulatory feedback of HES1, if 0, use the standard model without feedback
+h1_auto = 0;   # If 1, use the auto-regulatory feedback of HES1, if 0, use the standard model without feedback
 ps_bd4 = 0.0;
 ps_bn1 = 0.0;
 ps_bJ1 = 0.0;
-ps_ind = 0.0;
+ps_J1ind = 0.0;
 ps_ja = 0.0;
 ps_ni = 2000;
 ps_Kdni = 0.0; 
@@ -77,7 +77,7 @@ D4_prod: =>D4; Hn(bD4,H1,hMd4,4);                          # Eq (5) § 2
 D4_deg: D4=> ; Ma(D4 + (dD4*D4/(1+D4)), Kdd4);             # Eq (6) § 2
 
 # Jagged1 expression basal and inducible by HES1
-J1=0; VmJ1:= 250; hMj1:= ps_ja; Kdj1= 0.05; dJ1= 0; bJ1:= 0; 
+J1=0; VmJ1:= amp * ps_J1ind; hMj1:= ps_ja; Kdj1= 0.05; dJ1= 0; bJ1:= 0; 
 
 J1_prod: =>J1; Ma(1,bJ1) + Hp(VmJ1,H1,hMj1,4);             # Eq (7) § 2 
 J1_deg: J1=> ; Ma(J1 + (J1*dJ1/(1+J1)), Kdj1);             # Eq (8) § 2
@@ -88,14 +88,14 @@ J1_deg: J1=> ; Ma(J1 + (J1*dJ1/(1+J1)), Kdj1);             # Eq (8) § 2
 H1 = 0
 hMh1=35; 
 Kdh1 = 0.075; bH1 = 0.0; VmH1 = 7.5;
-H1_prod: =>H1; auto * (bH1 + Hp(VmH1,NICD,hMh1,2));        # Eq (9) § 3
+H1_prod: =>H1; h1_auto * (bH1 + Hp(VmH1,NICD,hMh1,2));        # Eq (9) § 3
 H1_deg: H1=> ; Ma(H1,Kdh1);                                # Eq (10) § 3
 ```
 
 ### HES 1 WITH autoregulatory feedback
 ```
 vm_prna = 0.1; hh1 = 8; K = 0.5;
-pmRNA_prod: => pmRNA; (1-auto) * Hc(vm_prna, NICD, pmRNA, HES, K, 1, K, 1, K, hh1); # Eq (11) § 3
+pmRNA_prod: => pmRNA; (1-h1_auto) * Hc(vm_prna, NICD, pmRNA, HES, K, 1, K, 1, K, hh1); # Eq (11) § 3
 
 kmrp = 0.1; kmrd = 0.05;                                        
 mRNA_prod: pmRNA => mRNA; MM(pmRNA,kmrp,K);                # Eq (12) § 3
@@ -201,12 +201,12 @@ The overall structure of this module is consistent with established NOTCH–Delt
 
 Figures 1.1A and 1.1B illustrate *NICD* dynamics under variation of the trans-interaction input (*tmDN*), with cis interactions disabled (*cmDN* = 0).
 
-![*NICD* VS *tmDN* raise](nb_Figures/NICD_tmDN_SC.png)
-![*NICD* VS *tmDN* decrease](nb_Figures/NICD_tmDN_SC_deg.png)
+![*NICD* VS *tmDN* raise](../nb_Figures/NICD_tmDN_SC.png)
+![*NICD* VS *tmDN* decrease](../nb_Figures/NICD_tmDN_SC_deg.png)
 
 **Figure 1.1A** shows *NICD* time courses for (*tmDN*) values between 0 and 5000. For all inputs, *NICD* rapidly approaches a stable steady state on a timescale compatible with experimental estimates (~20'). 
 
-![*NICD* VS *tmDN*](nb_Figures/NICD_Stdy_tmDN_SC.png)
+![*NICD* VS *tmDN*](../nb_Figures/NICD_Stdy_tmDN_SC.png)
 
 **Figure 1.1B** shows steady-state *NICD* levels as a function of (*tmDN*). The response is sigmoidal, with half-maximal activation near (*tmDN \approx hM_{ni} = 2000*), and saturation at *NICD* levels approaching the maximum defined by (*Vm_{ni}*). This parallels reference-model's architecture and ensures integration of -trans and -cis ligand–receptor interactions into a bounded signalling state.
 
@@ -248,11 +248,11 @@ Because steady state is set by the production/decay ratio (*N1^* \approx bN1/Kdn
 
 Fig. 2.1A and Fig. 2.1B show *N1* dynamics under variation of the trans-interaction input (*tmDN*).
 
-![*N1* VS *tmDN*](nb_Figures/N1_tmDN_SC.png)
+![*N1* VS *tmDN*](../nb_Figures/N1_tmDN_SC.png)
 
 **Fig. 2.1A** shows *N1* time courses for *tmDN* values between 0 and 5000. In all cases, *N1* relaxes to a stable steady state on the order of tens of minutes, consistent with the *1/Kdn1 \approx 20* min intrinsic timescale.
 
-![*N1* VS *tmDN*](nb_Figures/N1_Stdy_tmDN_SC.png)
+![*N1* VS *tmDN*](../nb_Figures/N1_Stdy_tmDN_SC.png)
 
 **Fig. 2.1B** reports steady-state *N1* levels as a function of *tmDN*.
 
@@ -284,11 +284,11 @@ D4_deg: D4=> ; Ma(D4 + (dD4*D4/(1+D4)), Kdd4);
 
 Fig. 2.2A and Fig. 2.2B illustrate *DLL4* dynamics under increasing *tmDN*.
 
-![*D4* VS *tmDN*](nb_Figures/D4_tmDN_SC.png)
+![*D4* VS *tmDN*](../nb_Figures/D4_tmDN_SC.png)
 
 Fig. 2.2A shows *D4* time courses for *tmDN* values between 0 and 5000. For low *tmDN*, *HES1* remains low and *D4* accumulates toward its basal steady state set by *bD4/Kdd4* on the *\sim 20* min timescale defined by *Kdd4*. As *tmDN* increases, NOTCH signaling elevates *HES1*, which represses *D4* production and drives a sharp drop in *D4* levels after a delay of ~20–30 min, reflecting the intermediate *HES1* layer.
 
-![*D4* VS *tmDN*](nb_Figures/D4_Stdy_tmDN_SC.png)
+![*D4* VS *tmDN*](../nb_Figures/D4_Stdy_tmDN_SC.png)
 
 Fig. 2.2B shows steady-state *D4* levels as a function of *tmDN*.
 
@@ -319,11 +319,11 @@ Boareto et al. (2015) instead consider *Jagged1* as an activator and explicitly
 
 Fig. 2.3A and Fig. 2.3B show Jagged1 dynamics under increasing *tmDN*.
 
-![*J1* VS *tmDN*](nb_Figures/J1_tmDN_SC.png)
+![*J1* VS *tmDN*](../nb_Figures/J1_tmDN_SC.png)
 
 Fig. 2.3A shows *J1* time courses for *tmDN* values between 0 and 5000. For low *tmDN*, *HES1* remains low and *J1* stays near zero. As *tmDN* increases, NOTCH signaling elevates *HES1*, which induces *J1* production after a delay of ~20–40 min, reflecting the intermediate *HES1* layer. Basal production is set to 0 to model pure lateral induction, but it can be switched on by setting *bJ1 > 0* without altering the model structure.
 
-![*J1* VS *tmDN*](nb_Figures/J1_Stdy_tmDN_SC.png)
+![*J1* VS *tmDN*](../nb_Figures/J1_Stdy_tmDN_SC.png)
 Fig. 2.3B shows steady-state *J1* levels as a function of *tmDN*.
 
 With *tmDN = 0*, *HES1* stays low and the inducible term is near zero, so *J1* remains off (basal *bJ1=0*). As *tmDN* increases, NOTCH signaling raises *HES1*; after a ~20–40 min delay (*HES1* build-up plus the *1/Kdj1* decay timescale), *J1* turns on and relaxes on the ~20 min timescale set by *Kdj1*. When fully induced, *J1* approaches *VmJ1/Kdj1 \approx 5{,}000* before interaction-dependent losses from *dJ1* are applied. The sharp rise for *tmDN \gtrsim 1600* reflects lateral induction driven by sustained NOTCH activity, modulated by competition with *DLL4* in the CC3D layer.
@@ -402,11 +402,11 @@ Parameter values are chosen to place *H1* dynamics on an hour-scale, consistent 
 
 To illustrate *HES1* dynamics, we vary the trans-interaction input *tmDN* while keeping cis interactions disabled (*cmDN = 0*). As shown in Section 1, this approach yields stable *NICD* levels in the range 0–100.
 
-Fig 3.1 A: ![H1_tmDN](nb_Figures/H1_tmDN_SC.png) 
+Fig 3.1 A: ![H1_tmDN](../nb_Figures/H1_tmDN_SC.png) 
 
 **Figure 3.1A** shows *HES1* time courses for *tmDN* values between 0 and 5000. For low *tmDN*, *NICD* remains low and *HES1* stays near zero. As *tmDN* increases, *NICD* activation induces *HES1* production, which rises gradually toward a stable steady state. *HES1* accumulation follows that of *NICD*, occurring on a slower timescale (~1 hour) consistent with experimental perturbation data.
 
-Fig 3.1 B: ![H1_tmDN_stdy](nb_Figures/H1_Stdy_tmDN_SC.png)
+Fig 3.1 B: ![H1_tmDN_stdy](../nb_Figures/H1_Stdy_tmDN_SC.png)
 
 **Figure 3.1B** shows steady-state *HES1* levels as a function of *tmDN*. The response is sigmoidal, with a sharp transition occurring for *tmDN \approx 1400*, corresponding to the *NICD* activation threshold. At high *tmDN*, *H1* saturates at a level determined by the balance between *NICD*-driven production and first-order degradation.
 
@@ -491,14 +491,14 @@ Under these constraints, we estimate the model parameters (*v m_{prna}*, *K*, *h
 
 We examine the response of the isolated *HES1* sub-model to constant *NICD* input.
 
-![H1_NICD_timecourses](nb_Figures/HES_NICD_SC.png)
+![H1_NICD_timecourses](../nb_Figures/HES_NICD_SC.png)
 
 **Figure 3.2.1A** shows *HES1* time courses for increasing *NICD* levels.  
 
-![H1_NICD_phaseplot](nb_Figures/HES_Stdy_NICD_SC.png)
+![H1_NICD_phaseplot](../nb_Figures/HES_Stdy_NICD_SC.png)
 
-![H1_NICD_phaseplot](nb_Figures/HES_Stdy_NICD_amp.png)
-![H1_NICD_phaseplot](nb_Figures/HES_Stdy_NICD_per.png)
+![H1_NICD_phaseplot](../nb_Figures/HES_Stdy_NICD_amp.png)
+![H1_NICD_phaseplot](../nb_Figures/HES_Stdy_NICD_per.png)
 
 **Figure 3.2.1B** summarizes the corresponding steady or oscillatory regimes.
 

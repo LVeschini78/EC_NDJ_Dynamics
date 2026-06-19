@@ -30,7 +30,7 @@ model_string = """
         ps_bd4 = 0.0;
         ps_bn1 = 0.0;
         ps_bJ1 = 0.0;
-        ps_ind = 0.0;
+        ps_J1ind = 0.0;
         ps_ja = 0.0;
         ps_ni = 2000;
         ps_Kdni = 0.0; 
@@ -57,7 +57,7 @@ model_string = """
         D4_deg: D4=> ; Ma(D4 + (dD4*D4/(1+D4)), Kdd4);                 # Eq (6)
           
         # Jagged1 expression basal and inducible by HES1
-        J1=0; VmJ1:= 250; hMj1:= ps_ja; Kdj1= 0.05; dJ1= 0; bJ1:= 0;
+        J1=0; VmJ1:= amp * ps_J1ind; hMj1:= ps_ja; Kdj1= 0.05; dJ1= 0; bJ1:= 0;
         
         J1_prod: =>J1; Ma(1,bJ1) + Hp(VmJ1,H1,hMj1,4);                  # Eq (7) 
         J1_deg: J1=> ; Ma(J1 + (J1*dJ1/(1+J1)), Kdj1);                  # Eq (8)

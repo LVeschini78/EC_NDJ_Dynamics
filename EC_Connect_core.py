@@ -9,6 +9,7 @@ from cc3d.core.PyCoreSpecs import (PottsCore,
 import numpy as np
 from random import uniform
 from scipy.stats import ks_2samp as ks
+from scipy.stats import anderson_ksamp as aks
 import json
 import os
 
@@ -157,6 +158,12 @@ class ECConnectStep(SteppableBasePy):
         # Apply model string to cells
         for cell in self.cell_list_by_type(self.EC):
 
+        # -------------------------------------------------------
+        # Uncomment to keep only few cells to evaluate sparse cells behaviour
+            # if cell.id not in [20,40, 50, 75, 80,100,120]: 
+            #     cell.type = 0
+        # -------------------------------------------------------
+
             self.add_antimony_to_cell(model_string=self.NED_model, model_name='NDS', cell=cell, step_size=step_size)
 
             cell.sbml.NDS['D4'] = uniform(0,3000)
@@ -241,12 +248,13 @@ class ECConnectStep(SteppableBasePy):
                                 self.timeseries[f'nb_{nb_cell.id}'] = [nb_cell.sbml.NDS['H1']]
 
         # At the end of the simulation (MCS 1000) or during the last 150 MCS collect data for KS statistic
-        if mcs in range(850,1001):
+        if mcs in range(850,1101):
             task = self.external_input[0]
             # print(f"Task: {task}")
             if task == 'write':
                 # Get the ref data from the json file huvec_data.json
-                with open(f'huvec_data.json', 'r') as f:
+                curr_dirr = os.getcwd()
+                with open(os.path.join(curr_dirr, 'huvec_data.json'), 'r') as f:
                     ref_data = json.load(f)
                 
                 ref_data = ref_data['huvec_data'] 
@@ -255,12 +263,13 @@ class ECConnectStep(SteppableBasePy):
                 ar_data = np.array(ref_data).flatten()
                 # print("shapes", ac_data.shape, ar_data.shape)
                 ks_stat, p_value = ks(ac_data, ar_data)
+                aks_results= aks([ac_data, ar_data])
                 # print("KS Stat:", ks_stat, "p_value:", p_value)
                 series = {'sim_data': ac_data.tolist(), 
                           'ref_data': ar_data.tolist(),
                           'nb_track_data': self.timeseries}
                 self.write_to_store(ks_stat=ks_stat, p_value=p_value, dict_data=series)
-                self.external_output = [ks_stat, p_value]
+                self.external_output = [ks_stat, p_value, aks_results.statistic, aks_results.pvalue]
 
             else:
                 curr_data =[cell.sbml.NDS['H1']/100 for cell in self.cell_list_by_type(self.EC)]
